@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.emilsjolander.components.StickyScrollViewItems.StickyScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ffff0000" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ffffff00" />
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ffffffff"
+            android:tag="sticky-nonconstant" >
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:indeterminate="true" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ffaaff33" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ff0000ff" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ff00ffff"
+            android:tag="sticky" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ffff3333" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ffffeeee" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ff0033ff" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ffcc9922"
+            android:tag="sticky" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ff333333" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ffeeeeee"
+            android:tag="sticky" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ff999999" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#fff322ff" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ff22ff22" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ffff0000" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ffff00ff" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="100dip"
+            android:background="#ff00ffff" />
+    </LinearLayout>
+
+</com.emilsjolander.components.StickyScrollViewItems.StickyScrollView>

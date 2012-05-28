@@ -108,6 +108,7 @@ public class StickyScrollView extends ScrollView {
 		if(!clipToPaddingHasBeenSet){
 			clippingToPadding = true;
 		}
+		notifyHierarchyChanged();
 	}
 
 	@Override
@@ -256,9 +257,12 @@ public class StickyScrollView extends ScrollView {
 
 	/**
 	 * Notify that the sticky attribute has been added or removed from one or more views in the View hierarchy
-	 * Also all this after you are done adding/removing any kind of View from the hierarchy within the ScrollView
 	 */
-	public void notifyHierarchyChanged(){
+	public void notifyStickyAttributeChanged(){
+		notifyHierarchyChanged();
+	}
+	
+	private void notifyHierarchyChanged(){
 		if(currentlyStickingView!=null){
 			stopStickingCurrentlyStickingView();
 		}

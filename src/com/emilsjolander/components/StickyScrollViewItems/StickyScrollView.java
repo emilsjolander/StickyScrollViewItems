@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 /**
@@ -30,7 +29,6 @@ public class StickyScrollView extends ScrollView {
 
 	private ArrayList<View> stickyViews;
 	private View currentlyStickingView;
-	private FrameLayout wrapper;
 	private float stickyViewTopOffset;
 	private boolean redirectTouchesToStickyView;
 	private boolean clippingToPadding;
@@ -41,9 +39,9 @@ public class StickyScrollView extends ScrollView {
 		@Override
 		public void run() {
 			if(currentlyStickingView!=null){
-				int l = currentlyStickingView.getLeft();
-				int t  = currentlyStickingView.getBottom();
-				int r = currentlyStickingView.getRight();
+				int l = getLeftForViewRelativeOnlyChild(currentlyStickingView);
+				int t  = getBottomForViewRelativeOnlyChild(currentlyStickingView);
+				int r = getRightForViewRelativeOnlyChild(currentlyStickingView);
 				int b = (int) (getScrollY() + (currentlyStickingView.getHeight() + stickyViewTopOffset));
 				invalidate(l,t,r,b);
 			}
@@ -65,8 +63,43 @@ public class StickyScrollView extends ScrollView {
 	}
 
 	public void setup(){
-		wrapper = new FrameLayout(getContext());
 		stickyViews = new ArrayList<View>();
+	}
+	
+	private int getLeftForViewRelativeOnlyChild(View v){
+		int left = v.getLeft();
+		while(v.getParent() != getChildAt(0)){
+			v = (View) v.getParent();
+			left += v.getLeft();
+		}
+		return left;
+	}
+	
+	private int getTopForViewRelativeOnlyChild(View v){
+		int top = v.getTop();
+		while(v.getParent() != getChildAt(0)){
+			v = (View) v.getParent();
+			top += v.getTop();
+		}
+		return top;
+	}
+	
+	private int getRightForViewRelativeOnlyChild(View v){
+		int right = v.getRight();
+		while(v.getParent() != getChildAt(0)){
+			v = (View) v.getParent();
+			right += v.getRight();
+		}
+		return right;
+	}
+	
+	private int getBottomForViewRelativeOnlyChild(View v){
+		int bottom = v.getBottom();
+		while(v.getParent() != getChildAt(0)){
+			v = (View) v.getParent();
+			bottom += v.getBottom();
+		}
+		return bottom;
 	}
 
 	@Override
@@ -84,45 +117,34 @@ public class StickyScrollView extends ScrollView {
 		clipToPaddingHasBeenSet = true;
 	}
 
-	private void addViewToWrapper(View child){
-		if(wrapper.getChildCount()>0) return;
-		if (getChildCount() > 0) {
-			throw new IllegalStateException("ScrollView can host only one direct child");
-		}
-		FrameLayout.LayoutParams params = new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT);
-		child.setLayoutParams(params);
-		wrapper.addView(child);
-		findStickyViews(wrapper);
-	}
-
 	@Override
 	public void addView(View child) {
-		addViewToWrapper(child);
-		super.addView(wrapper);
+		super.addView(child);
+		findStickyViews(child);
 	}
 
 	@Override
 	public void addView(View child, int index) {
-		addViewToWrapper(child);
-		super.addView(wrapper, index);
+		super.addView(child, index);
+		findStickyViews(child);
 	}
 
 	@Override
 	public void addView(View child, int index, android.view.ViewGroup.LayoutParams params) {
-		addViewToWrapper(child);
-		super.addView(wrapper, index, params);
+		super.addView(child, index, params);
+		findStickyViews(child);
 	}
 
 	@Override
 	public void addView(View child, int width, int height) {
-		addViewToWrapper(child);
-		super.addView(wrapper, width, height);
+		super.addView(child, width, height);
+		findStickyViews(child);
 	}
 
 	@Override
 	public void addView(View child, android.view.ViewGroup.LayoutParams params) {
-		addViewToWrapper(child);
-		super.addView(wrapper, params);
+		super.addView(child, params);
+		findStickyViews(child);
 	}
 
 	@Override
@@ -148,14 +170,14 @@ public class StickyScrollView extends ScrollView {
 			if(redirectTouchesToStickyView){
 				redirectTouchesToStickyView = 
 					ev.getY()<=(currentlyStickingView.getHeight()+stickyViewTopOffset) && 
-					ev.getX() >= currentlyStickingView.getLeft() && 
-					ev.getX() <= currentlyStickingView.getRight();
+					ev.getX() >= getLeftForViewRelativeOnlyChild(currentlyStickingView) && 
+					ev.getX() <= getRightForViewRelativeOnlyChild(currentlyStickingView);
 			}
 		}else if(currentlyStickingView == null){
 			redirectTouchesToStickyView = false;
 		}
 		if(redirectTouchesToStickyView){
-			ev.offsetLocation(0, -1*((getScrollY() + stickyViewTopOffset) - currentlyStickingView.getTop()));
+			ev.offsetLocation(0, -1*((getScrollY() + stickyViewTopOffset) - getTopForViewRelativeOnlyChild(currentlyStickingView)));
 		}
 		return super.dispatchTouchEvent(ev);
 	}
@@ -165,7 +187,7 @@ public class StickyScrollView extends ScrollView {
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		if(redirectTouchesToStickyView){
-			ev.offsetLocation(0, ((getScrollY() + stickyViewTopOffset) - currentlyStickingView.getTop()));
+			ev.offsetLocation(0, ((getScrollY() + stickyViewTopOffset) - getTopForViewRelativeOnlyChild(currentlyStickingView)));
 		} 
 		
 		if(ev.getAction()==MotionEvent.ACTION_DOWN){
@@ -196,19 +218,19 @@ public class StickyScrollView extends ScrollView {
 		View viewThatShouldStick = null;
 		View approachingView = null;
 		for(View v : stickyViews){
-			int viewTop = v.getTop() - getScrollY() + (clippingToPadding ? 0 : getPaddingTop());
+			int viewTop = getTopForViewRelativeOnlyChild(v) - getScrollY() + (clippingToPadding ? 0 : getPaddingTop());
 			if(viewTop<=0){
-				if(viewThatShouldStick==null || viewTop>(viewThatShouldStick.getTop() - getScrollY() + (clippingToPadding ? 0 : getPaddingTop()))){
+				if(viewThatShouldStick==null || viewTop>(getTopForViewRelativeOnlyChild(viewThatShouldStick) - getScrollY() + (clippingToPadding ? 0 : getPaddingTop()))){
 					viewThatShouldStick = v;
 				}
 			}else{
-				if(approachingView == null || viewTop<(approachingView.getTop() - getScrollY() + (clippingToPadding ? 0 : getPaddingTop()))){
+				if(approachingView == null || viewTop<(getTopForViewRelativeOnlyChild(approachingView) - getScrollY() + (clippingToPadding ? 0 : getPaddingTop()))){
 					approachingView = v;
 				}
 			}
 		}
 		if(viewThatShouldStick!=null){
-			stickyViewTopOffset = approachingView == null ? 0 : Math.min(0, approachingView.getTop() - getScrollY()  + (clippingToPadding ? 0 : getPaddingTop()) - viewThatShouldStick.getHeight());
+			stickyViewTopOffset = approachingView == null ? 0 : Math.min(0, getTopForViewRelativeOnlyChild(approachingView) - getScrollY()  + (clippingToPadding ? 0 : getPaddingTop()) - viewThatShouldStick.getHeight());
 			if(viewThatShouldStick != currentlyStickingView){
 				if(currentlyStickingView!=null){
 					stopStickingCurrentlyStickingView();
@@ -241,18 +263,26 @@ public class StickyScrollView extends ScrollView {
 			stopStickingCurrentlyStickingView();
 		}
 		stickyViews.clear();
-		findStickyViews(wrapper);
+		findStickyViews(getChildAt(0));
 		doTheStickyThing();
 		invalidate();
 	}
 
-	private void findStickyViews(ViewGroup vg) {
-		for(int i = 0 ; i<vg.getChildCount() ; i++){
-			String tag = (String) vg.getChildAt(i).getTag();
+	private void findStickyViews(View v) {
+		if(v instanceof ViewGroup){
+			ViewGroup vg = (ViewGroup)v;
+			for(int i = 0 ; i<vg.getChildCount() ; i++){
+				String tag = (String) vg.getChildAt(i).getTag();
+				if(tag!=null && tag.contains(STICKY_TAG)){
+					stickyViews.add(vg.getChildAt(i));
+				}else if(vg.getChildAt(i) instanceof ViewGroup){
+					findStickyViews((ViewGroup) vg.getChildAt(i));
+				}
+			}
+		}else{
+			String tag = (String) v.getTag();
 			if(tag!=null && tag.contains(STICKY_TAG)){
-				stickyViews.add(vg.getChildAt(i));
-			}else if(vg.getChildAt(i) instanceof ViewGroup){
-				findStickyViews((ViewGroup) vg.getChildAt(i));
+				stickyViews.add(v);
 			}
 		}
 	}

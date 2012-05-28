@@ -33,7 +33,9 @@ public class StickyScrollView extends ScrollView {
 	private FrameLayout wrapper;
 	private float stickyViewTopOffset;
 	private boolean redirectTouchesToStickyView;
-	
+	private boolean clippingToPadding;
+	private boolean clipToPaddingHasBeenSet;
+
 	private Runnable invalidateRunnable = new Runnable() {
 
 		@Override
@@ -54,7 +56,7 @@ public class StickyScrollView extends ScrollView {
 	}
 
 	public StickyScrollView(Context context, AttributeSet attrs) {
-		this(context, null, android.R.attr.scrollViewStyle);
+		this(context, attrs, android.R.attr.scrollViewStyle);
 	}
 
 	public StickyScrollView(Context context, AttributeSet attrs, int defStyle) {
@@ -65,6 +67,21 @@ public class StickyScrollView extends ScrollView {
 	public void setup(){
 		wrapper = new FrameLayout(getContext());
 		stickyViews = new ArrayList<View>();
+	}
+
+	@Override
+	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+		super.onLayout(changed, l, t, r, b);
+		if(!clipToPaddingHasBeenSet){
+			clippingToPadding = true;
+		}
+	}
+
+	@Override
+	public void setClipToPadding(boolean clipToPadding) {
+		super.setClipToPadding(clipToPadding);
+		clippingToPadding  = clipToPadding;
+		clipToPaddingHasBeenSet = true;
 	}
 
 	private void addViewToWrapper(View child){
@@ -111,16 +128,22 @@ public class StickyScrollView extends ScrollView {
 	@Override
 	protected void dispatchDraw(Canvas canvas) {
 		super.dispatchDraw(canvas);
-		canvas.restore();
-		canvas.translate(0, stickyViewTopOffset);
 		if(currentlyStickingView != null){
+			canvas.save();
+			canvas.translate(getPaddingLeft(), getScrollY() + stickyViewTopOffset + (clippingToPadding ? getPaddingTop() : 0));
+			canvas.clipRect(0, (clippingToPadding ? -stickyViewTopOffset : 0), getWidth(), currentlyStickingView.getHeight());
 			currentlyStickingView.draw(canvas);
+			canvas.restore();
 		}
 	}
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent ev) {
 		if(ev.getAction()==MotionEvent.ACTION_DOWN){
+			redirectTouchesToStickyView = true;
+		}
+
+		if(redirectTouchesToStickyView){
 			redirectTouchesToStickyView = currentlyStickingView != null;
 			if(redirectTouchesToStickyView){
 				redirectTouchesToStickyView = 
@@ -128,12 +151,39 @@ public class StickyScrollView extends ScrollView {
 					ev.getX() >= currentlyStickingView.getLeft() && 
 					ev.getX() <= currentlyStickingView.getRight();
 			}
+		}else if(currentlyStickingView == null){
+			redirectTouchesToStickyView = false;
 		}
 		if(redirectTouchesToStickyView){
-			currentlyStickingView.onTouchEvent(ev);
 			ev.offsetLocation(0, -1*((getScrollY() + stickyViewTopOffset) - currentlyStickingView.getTop()));
 		}
 		return super.dispatchTouchEvent(ev);
+	}
+
+	private boolean hasNotDoneActionDown = true;
+
+	@Override
+	public boolean onTouchEvent(MotionEvent ev) {
+		if(redirectTouchesToStickyView){
+			ev.offsetLocation(0, ((getScrollY() + stickyViewTopOffset) - currentlyStickingView.getTop()));
+		} 
+		
+		if(ev.getAction()==MotionEvent.ACTION_DOWN){
+			hasNotDoneActionDown = false;
+		}
+		
+		if(hasNotDoneActionDown){
+			MotionEvent down = MotionEvent.obtain(ev);
+			down.setAction(MotionEvent.ACTION_DOWN);
+			super.onTouchEvent(down);
+			hasNotDoneActionDown = false;
+		}
+		
+		if(ev.getAction()==MotionEvent.ACTION_UP || ev.getAction()==MotionEvent.ACTION_CANCEL){
+			hasNotDoneActionDown = true;
+		}
+		
+		return super.onTouchEvent(ev);
 	}
 
 	@Override
@@ -146,19 +196,19 @@ public class StickyScrollView extends ScrollView {
 		View viewThatShouldStick = null;
 		View approachingView = null;
 		for(View v : stickyViews){
-			int viewTop = v.getTop() - getScrollY();
+			int viewTop = v.getTop() - getScrollY() + (clippingToPadding ? 0 : getPaddingTop());
 			if(viewTop<=0){
-				if(viewThatShouldStick==null || viewTop>(viewThatShouldStick.getTop() - getScrollY())){
+				if(viewThatShouldStick==null || viewTop>(viewThatShouldStick.getTop() - getScrollY() + (clippingToPadding ? 0 : getPaddingTop()))){
 					viewThatShouldStick = v;
 				}
 			}else{
-				if(approachingView == null || viewTop<(approachingView.getTop() - getScrollY())){
+				if(approachingView == null || viewTop<(approachingView.getTop() - getScrollY() + (clippingToPadding ? 0 : getPaddingTop()))){
 					approachingView = v;
 				}
 			}
 		}
 		if(viewThatShouldStick!=null){
-			stickyViewTopOffset = approachingView == null ? 0 : Math.min(0, approachingView.getTop() - getScrollY() - viewThatShouldStick.getHeight());
+			stickyViewTopOffset = approachingView == null ? 0 : Math.min(0, approachingView.getTop() - getScrollY()  + (clippingToPadding ? 0 : getPaddingTop()) - viewThatShouldStick.getHeight());
 			if(viewThatShouldStick != currentlyStickingView){
 				if(currentlyStickingView!=null){
 					stopStickingCurrentlyStickingView();
@@ -184,8 +234,9 @@ public class StickyScrollView extends ScrollView {
 
 	/**
 	 * Notify that the sticky attribute has been added or removed from one or more views in the View hierarchy
+	 * Also all this after you are done adding/removing any kind of View from the hierarchy within the ScrollView
 	 */
-	public void notifyStickyAttributesChanged(){
+	public void notifyHierarchyChanged(){
 		if(currentlyStickingView!=null){
 			stopStickingCurrentlyStickingView();
 		}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.emilsjolander.components.StickyScrollViewItems.StickyScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -24,10 +24,11 @@
             android:background="#ffffffff"
             android:tag="sticky-nonconstant" >
 
-            <ProgressBar
+            <Button
+                android:id="@+id/mybutton"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:indeterminate="true" />
+                android:text="hello world"/>
         </FrameLayout>
 
         <View

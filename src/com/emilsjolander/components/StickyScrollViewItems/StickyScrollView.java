@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ScrollView;
 
 /**
@@ -155,7 +157,9 @@ public class StickyScrollView extends ScrollView {
 			canvas.save();
 			canvas.translate(getPaddingLeft(), getScrollY() + stickyViewTopOffset + (clippingToPadding ? getPaddingTop() : 0));
 			canvas.clipRect(0, (clippingToPadding ? -stickyViewTopOffset : 0), getWidth(), currentlyStickingView.getHeight());
+			showView(currentlyStickingView);
 			currentlyStickingView.draw(canvas);
+			hideView(currentlyStickingView);
 			canvas.restore();
 		}
 	}
@@ -245,12 +249,14 @@ public class StickyScrollView extends ScrollView {
 
 	private void startStickingView(View viewThatShouldStick) {
 		currentlyStickingView = viewThatShouldStick;
+		hideView(currentlyStickingView);
 		if(currentlyStickingView.getTag().equals(STICKY_TAG_NONCONSTANT)){
 			post(invalidateRunnable);
 		}
 	}
 
 	private void stopStickingCurrentlyStickingView() {
+		showView(currentlyStickingView);
 		currentlyStickingView = null;
 		removeCallbacks(invalidateRunnable);
 	}
@@ -288,6 +294,28 @@ public class StickyScrollView extends ScrollView {
 			if(tag!=null && tag.contains(STICKY_TAG)){
 				stickyViews.add(v);
 			}
+		}
+	}
+
+	private void hideView(View v) {
+		if(Build.VERSION.SDK_INT>=11){
+			v.setAlpha(0);
+		}else{
+			AlphaAnimation anim = new AlphaAnimation(1, 0);
+			anim.setDuration(0);
+			anim.setFillAfter(true);
+			v.startAnimation(anim);
+		}
+	}
+
+	private void showView(View v) {
+		if(Build.VERSION.SDK_INT>=11){
+			v.setAlpha(1);
+		}else{
+			AlphaAnimation anim = new AlphaAnimation(0, 1);
+			anim.setDuration(0);
+			anim.setFillAfter(true);
+			v.startAnimation(anim);
 		}
 	}
 

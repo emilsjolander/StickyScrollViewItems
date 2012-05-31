@@ -25,9 +25,14 @@ public class StickyScrollView extends ScrollView {
 	public static final String STICKY_TAG = "sticky";
 
 	/**
-	 * Tag for views that should stick and have non-constant drawing. e.g. Buttons, ProgressBars etc
+	 * Flag for views that should stick and have non-constant drawing. e.g. Buttons, ProgressBars etc
 	 */
-	public static final String STICKY_TAG_NONCONSTANT = "sticky-nonconstant";
+	public static final String FLAG_NONCONSTANT = "-nonconstant";
+
+	/**
+	 * Flag for views that have aren't fully opaque
+	 */
+	public static final String FLAG_HASTRANSPARANCY = "-hastransparancy";
 
 	private ArrayList<View> stickyViews;
 	private View currentlyStickingView;
@@ -157,9 +162,13 @@ public class StickyScrollView extends ScrollView {
 			canvas.save();
 			canvas.translate(getPaddingLeft(), getScrollY() + stickyViewTopOffset + (clippingToPadding ? getPaddingTop() : 0));
 			canvas.clipRect(0, (clippingToPadding ? -stickyViewTopOffset : 0), getWidth(), currentlyStickingView.getHeight());
-			showView(currentlyStickingView);
-			currentlyStickingView.draw(canvas);
-			hideView(currentlyStickingView);
+			if(getStringTagForView(currentlyStickingView).contains(FLAG_HASTRANSPARANCY)){
+				showView(currentlyStickingView);
+				currentlyStickingView.draw(canvas);
+				hideView(currentlyStickingView);
+			}else{
+				currentlyStickingView.draw(canvas);
+			}
 			canvas.restore();
 		}
 	}
@@ -249,14 +258,18 @@ public class StickyScrollView extends ScrollView {
 
 	private void startStickingView(View viewThatShouldStick) {
 		currentlyStickingView = viewThatShouldStick;
-		hideView(currentlyStickingView);
-		if(currentlyStickingView.getTag().equals(STICKY_TAG_NONCONSTANT)){
+		if(getStringTagForView(currentlyStickingView).contains(FLAG_HASTRANSPARANCY)){
+			hideView(currentlyStickingView);
+		}
+		if(((String)currentlyStickingView.getTag()).contains(FLAG_NONCONSTANT)){
 			post(invalidateRunnable);
 		}
 	}
 
 	private void stopStickingCurrentlyStickingView() {
-		showView(currentlyStickingView);
+		if(getStringTagForView(currentlyStickingView).contains(FLAG_HASTRANSPARANCY)){
+			showView(currentlyStickingView);
+		}
 		currentlyStickingView = null;
 		removeCallbacks(invalidateRunnable);
 	}
@@ -282,8 +295,7 @@ public class StickyScrollView extends ScrollView {
 		if(v instanceof ViewGroup){
 			ViewGroup vg = (ViewGroup)v;
 			for(int i = 0 ; i<vg.getChildCount() ; i++){
-				Object tagObject = vg.getChildAt(i).getTag();
-				String tag = String.valueOf(tagObject);
+				String tag = getStringTagForView(vg.getChildAt(i));
 				if(tag!=null && tag.contains(STICKY_TAG)){
 					stickyViews.add(vg.getChildAt(i));
 				}else if(vg.getChildAt(i) instanceof ViewGroup){
@@ -296,6 +308,11 @@ public class StickyScrollView extends ScrollView {
 				stickyViews.add(v);
 			}
 		}
+	}
+	
+	private String getStringTagForView(View v){
+		Object tagObject = v.getTag();
+		return String.valueOf(tagObject);
 	}
 
 	private void hideView(View v) {

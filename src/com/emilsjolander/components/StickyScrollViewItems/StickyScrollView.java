@@ -12,7 +12,7 @@ import android.widget.ScrollView;
 
 /**
  * 
- * @author Emil Sjšlander - sjolander.emil@gmail.com
+ * @author Emil Sjï¿½lander - sjolander.emil@gmail.com
  *
  */
 public class StickyScrollView extends ScrollView {
@@ -34,7 +34,7 @@ public class StickyScrollView extends ScrollView {
 	private boolean clippingToPadding;
 	private boolean clipToPaddingHasBeenSet;
 
-	private Runnable invalidateRunnable = new Runnable() {
+	private final Runnable invalidateRunnable = new Runnable() {
 
 		@Override
 		public void run() {
@@ -276,11 +276,12 @@ public class StickyScrollView extends ScrollView {
 		if(v instanceof ViewGroup){
 			ViewGroup vg = (ViewGroup)v;
 			for(int i = 0 ; i<vg.getChildCount() ; i++){
-				String tag = (String) vg.getChildAt(i).getTag();
+				Object tagObject = vg.getChildAt(i).getTag();
+				String tag = String.valueOf(tagObject);
 				if(tag!=null && tag.contains(STICKY_TAG)){
 					stickyViews.add(vg.getChildAt(i));
 				}else if(vg.getChildAt(i) instanceof ViewGroup){
-					findStickyViews((ViewGroup) vg.getChildAt(i));
+					findStickyViews(vg.getChildAt(i));
 				}
 			}
 		}else{

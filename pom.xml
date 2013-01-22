@@ -1,0 +1,85 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.emilsjolander.components.StickyScrollViewItems</groupId>
+  <artifactId>parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>StickyScrollViewItems - Parent</name>
+
+  <modules>
+    <module>library</module>
+    <module>sample</module>
+  </modules>
+
+  <developers>
+    <developer>
+      <name>Emils Jölander</name>
+      <email>sjolander.emil@gmail.com</email>
+      <id>emilsjolander</id>
+      <url>http://emilsjolander.se</url>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+      <developer>
+        <name>Stefano Dacchille</name>
+        <email>stefano.dacchille@gmail.com</email>
+        <id>stefanodacchille</id>
+        <url>http://about.me/sdacchille</url>
+        <roles>
+          <role>developer</role>
+        </roles>
+    </developer>
+  </developers>
+
+  <licenses>
+    <license>
+      <name>Apache License Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/emilsjolander/StickyScrollViewItems/issues</url>
+  </issueManagement>
+
+  <scm>
+    <url>https://github.com/emilsjolander/StickyScrollViewItems/</url>
+    <connection>scm:git:git://github.com/emilsjolander/StickyScrollViewItems.git</connection>
+    <developerConnection>scm:git:git@github.com:emilsjolander/StickyScrollViewItems.git</developerConnection>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>1.6</java.version>
+    <android.maven.version>3.4.1</android.maven.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.google.android</groupId>
+        <artifactId>android</artifactId>
+        <version>4.0.1.2</version>
+        <scope>provided</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

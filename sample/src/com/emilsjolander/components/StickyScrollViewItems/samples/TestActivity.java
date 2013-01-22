@@ -1,4 +1,4 @@
-package com.emilsjolander.components.StickyScrollViewItems.test;
+package com.emilsjolander.components.StickyScrollViewItems.samples;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import com.emilsjolander.components.StickyScrollViewItems.R;
 
 /**
  * 
- * @author Emil Sjšlander - sjolander.emil@gmail.com
+ * @author Emil Sjï¿½lander - sjolander.emil@gmail.com
  *
  */
 public class TestActivity extends Activity {

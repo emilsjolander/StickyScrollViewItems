@@ -56,6 +56,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.6</java.version>
     <android.maven.version>3.4.1</android.maven.version>
+    <github.global.server>github</github.global.server>
+    <repository.name>StickyScrollViewItems</repository.name>
+    <repository.owner>stefanodacchille</repository.owner>
   </properties>
 
   <dependencyManagement>
@@ -80,6 +83,46 @@
           <target>${java.version}</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>com.github.github</groupId>
+        <artifactId>site-maven-plugin</artifactId>
+        <version>0.7</version>
+        <configuration>
+            <message>Maven artifacts for ${project.version}</message>
+            <noJekyll>true</noJekyll>
+            <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+            <branch>refs/heads/mvn-repo</branch>
+            <!-- <includes>
+              <include>**/*</include>
+            </includes> -->
+            <merge>true</merge>
+            <repositoryName>${repository.name}</repositoryName>
+            <repositoryOwner>${repository.owner}</repositoryOwner>
+        </configuration>
+        <executions>
+          <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
+          <execution>
+            <goals>
+              <goal>site</goal>
+            </goals>
+            <phase>deploy</phase>
+          </execution>
+        </executions>
+        </plugin>
     </plugins>
   </build>
+
+  <distributionManagement>
+    <repository>
+        <id>internal.repo</id>
+        <name>Temporary Staging Repository</name>
+        <url>file://${project.build.directory}/mvn-repo</url>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>internal.snapshot-repo</id>
+      <name>Temporary Staging Snapshot Repository</name>
+      <url>file://${project.build.directory}/mvn-repo</url>
+    </snapshotRepository>
+</distributionManagement>
 </project>

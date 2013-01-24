@@ -22,15 +22,6 @@
         <role>developer</role>
       </roles>
     </developer>
-      <developer>
-        <name>Stefano Dacchille</name>
-        <email>stefano.dacchille@gmail.com</email>
-        <id>stefanodacchille</id>
-        <url>http://about.me/sdacchille</url>
-        <roles>
-          <role>developer</role>
-        </roles>
-    </developer>
   </developers>
 
   <licenses>

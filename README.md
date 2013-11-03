@@ -34,7 +34,8 @@ As with a regular `ScrollView` you are only allowed one child. But that child ca
 <StickyScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_height="match_parent" android:layout_width="match_parent">
 
-	<LinearLayout android:layout_height="match_parent" android:layout_width="match_parent" 
+	<LinearLayout 
+		android:layout_height="match_parent" android:layout_width="match_parent" 
 		android:orientation="horizontal">
 
 		<!-- other children -->

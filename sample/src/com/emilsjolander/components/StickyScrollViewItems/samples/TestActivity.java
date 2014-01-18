@@ -7,24 +7,32 @@ import android.view.View.OnClickListener;
 import android.widget.Toast;
 
 import com.emilsjolander.components.StickyScrollViewItems.R;
+import com.emilsjolander.components.StickyScrollViewItems.StickyScrollView;
 
 /**
  * 
  * @author Emil Sj�lander - sjolander.emil@gmail.com
- *
+ * 
  */
 public class TestActivity extends Activity {
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        findViewById(R.id.mybutton).setOnClickListener(new OnClickListener() {
-			
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		findViewById(R.id.mybutton).setOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "hej", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "hej",
+						Toast.LENGTH_SHORT).show();
 			}
 		});
-    }
+
+		// StickyScrollView scrollView = (StickyScrollView)
+		// findViewById(R.id.ScrollView);
+		// scrollView.setShadowDrawable(getResources().getDrawable(
+		// R.drawable.sticky_shadow_default));
+		// scrollView.setShadowHeight(height);
+	}
 }

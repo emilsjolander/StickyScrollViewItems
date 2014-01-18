@@ -29,9 +29,10 @@ public class TestActivity extends Activity {
 			}
 		});
 
-		StickyScrollView scrollView = (StickyScrollView) findViewById(R.id.ScrollView);
-		scrollView.setShadowDrawable(getResources().getDrawable(
-				R.drawable.sticky_shadow_default));
+		// StickyScrollView scrollView = (StickyScrollView)
+		// findViewById(R.id.ScrollView);
+		// scrollView.setShadowDrawable(getResources().getDrawable(
+		// R.drawable.sticky_shadow_default));
 		// scrollView.setShadowHeight(height);
 	}
 }

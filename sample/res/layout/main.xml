@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.emilsjolander.components.StickyScrollViewItems.StickyScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:whatever="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ScrollView"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:id="@+id/ScrollView" >
+    whatever:stuckShadowDrawable="@drawable/sticky_shadow_default" >
 
     <LinearLayout
         android:layout_width="fill_parent"

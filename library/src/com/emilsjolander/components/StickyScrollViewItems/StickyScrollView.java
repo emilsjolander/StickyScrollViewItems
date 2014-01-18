@@ -3,10 +3,12 @@ package com.emilsjolander.components.StickyScrollViewItems;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,8 +84,25 @@ public class StickyScrollView extends ScrollView {
 		super(context, attrs, defStyle);
 		setup();
 
+		TypedArray a = context.obtainStyledAttributes(attrs,
+				R.styleable.StickyScrollView, defStyle, 0);
+
 		final float density = context.getResources().getDisplayMetrics().density;
-		mShadowHeight = (int) (DEFAULT_SHADOW_HEIGHT * density + 0.5f);
+		int defaultShadowHeightInPix = (int) (DEFAULT_SHADOW_HEIGHT * density + 0.5f);
+
+		mShadowHeight = a.getDimensionPixelSize(
+				R.styleable.StickyScrollView_stuckShadowHeight,
+				defaultShadowHeightInPix);
+
+		int shadowDrawableRes = a.getResourceId(
+				R.styleable.StickyScrollView_stuckShadowDrawable, -1);
+
+		if (shadowDrawableRes != -1) {
+			mShadowDrawable = context.getResources().getDrawable(
+					shadowDrawableRes);
+		}
+
+		a.recycle();
 	}
 
 	/**
@@ -310,6 +329,8 @@ public class StickyScrollView extends ScrollView {
 				}
 			}
 		}
+		Log.i(STICKY_TAG, "vTSS null? " + (viewThatShouldStick == null)
+				+ ", aV null? " + (approachingView == null));
 		if (viewThatShouldStick != null) {
 			stickyViewTopOffset = approachingView == null ? 0 : Math.min(0,
 					getTopForViewRelativeOnlyChild(approachingView)

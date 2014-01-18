@@ -58,7 +58,7 @@ There are also two additional flags that can be set on views that were added to 
 
 So this ends up with 4 different ways to tag a view as sticky resulting is slightly different behaviour `android:tag="sticky"` `android:tag="sticky-hastransparancy"` `android:tag="sticky-nonconstant"` and `android:tag="sticky-hastransparancy-nonconstant"`.
 
-If you want to add a shadow drawable below the stuck items, you must declare a namespace to find the shadow attributes `xmlns:whatever="http://schemas.android.com/apk/res-auto"`. You can then specify the shadow drawable with `whatever:stuckShadowDrawable=""` and the shadow height with `whatever:stuckShadowHeight=""` in xml. Note that the default shadow height is 10dip.
+If you want to add a shadow drawable below the stuck items, you must declare a namespace to find the shadow attributes `xmlns:whatever="http://schemas.android.com/apk/res-auto"`. Usually you do this in the root layout element in you layout.xml file. You can then specify the shadow drawable with `whatever:stuckShadowDrawable=""` and the shadow height with `whatever:stuckShadowHeight=""` in xml. Note that when left unspecified, the default shadow height is 10dip.
 ```xml
 <StickyScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:whatever="http://schemas.android.com/apk/res-auto"
@@ -75,6 +75,5 @@ These shadow height and drawable can also be set programatically. Note that, unl
 StickyScrollView stickyScroll = (StickyScrollView) findViewById(R.id.sticky_scroll);
 stickyScroll.setShadowDrawable(getResources().getDrawable(
 				R.drawable.shadow_drawable));
-// you can set the shadow height (in pixels!), however the default is 10 dip.
 stickyScroll.setShadowHeight(50); // in pixels
 ```

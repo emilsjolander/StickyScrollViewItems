@@ -44,7 +44,7 @@ public class StickyScrollView extends ScrollView {
 	private ArrayList<View> stickyViews;
 	private View currentlyStickingView;
 	private float stickyViewTopOffset;
-	private float stickyViewLeftOffset;
+	private int stickyViewLeftOffset;
 	private boolean redirectTouchesToStickyView;
 	private boolean clippingToPadding;
 	private boolean clipToPaddingHasBeenSet;

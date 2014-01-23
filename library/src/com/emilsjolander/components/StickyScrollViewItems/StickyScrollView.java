@@ -37,6 +37,7 @@ public class StickyScrollView extends ScrollView {
 	private ArrayList<View> stickyViews;
 	private View currentlyStickingView;
 	private float stickyViewTopOffset;
+	private int stickyViewLeftOffset;
 	private boolean redirectTouchesToStickyView;
 	private boolean clippingToPadding;
 	private boolean clipToPaddingHasBeenSet;
@@ -160,7 +161,8 @@ public class StickyScrollView extends ScrollView {
 		super.dispatchDraw(canvas);
 		if(currentlyStickingView != null){
 			canvas.save();
-			canvas.translate(getPaddingLeft(), getScrollY() + stickyViewTopOffset + (clippingToPadding ? getPaddingTop() : 0));
+			canvas.translate(getPaddingLeft() + stickyViewLeftOffset,
+					getScrollY() + stickyViewTopOffset + (clippingToPadding ? getPaddingTop() : 0));
 			canvas.clipRect(0, (clippingToPadding ? -stickyViewTopOffset : 0), getWidth(), currentlyStickingView.getHeight());
 			if(getStringTagForView(currentlyStickingView).contains(FLAG_HASTRANSPARANCY)){
 				showView(currentlyStickingView);
@@ -249,6 +251,8 @@ public class StickyScrollView extends ScrollView {
 				if(currentlyStickingView!=null){
 					stopStickingCurrentlyStickingView();
 				}
+				// only compute the left offset when we start sticking.
+				stickyViewLeftOffset = getLeftForViewRelativeOnlyChild(viewThatShouldStick);
 				startStickingView(viewThatShouldStick);
 			}
 		}else if(currentlyStickingView!=null){

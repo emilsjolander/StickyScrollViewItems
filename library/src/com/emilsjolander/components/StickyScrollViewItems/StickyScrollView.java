@@ -3,7 +3,9 @@ package com.emilsjolander.components.StickyScrollViewItems;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -33,6 +35,11 @@ public class StickyScrollView extends ScrollView {
 	 * Flag for views that have aren't fully opaque
 	 */
 	public static final String FLAG_HASTRANSPARANCY = "-hastransparancy";
+	
+	/**
+	 * Default height of the shadow peeking out below the stuck view.
+	 */
+	private static final int DEFAULT_SHADOW_HEIGHT = 10; // dp;
 
 	private ArrayList<View> stickyViews;
 	private View currentlyStickingView;
@@ -41,6 +48,9 @@ public class StickyScrollView extends ScrollView {
 	private boolean redirectTouchesToStickyView;
 	private boolean clippingToPadding;
 	private boolean clipToPaddingHasBeenSet;
+
+	private int mShadowHeight;
+	private Drawable mShadowDrawable;
 
 	private final Runnable invalidateRunnable = new Runnable() {
 
@@ -68,7 +78,40 @@ public class StickyScrollView extends ScrollView {
 	public StickyScrollView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		setup();
+
+		
+
+		TypedArray a = context.obtainStyledAttributes(attrs,
+		        R.styleable.StickyScrollView, defStyle, 0);
+
+    		final float density = context.getResources().getDisplayMetrics().density;
+    		int defaultShadowHeightInPix = (int) (DEFAULT_SHADOW_HEIGHT * density + 0.5f);
+
+    		mShadowHeight = a.getDimensionPixelSize(
+        		R.styleable.StickyScrollView_stuckShadowHeight,
+        		defaultShadowHeightInPix);
+
+    			int shadowDrawableRes = a.getResourceId(
+        		R.styleable.StickyScrollView_stuckShadowDrawable, -1);
+
+    		if (shadowDrawableRes != -1) {
+      			mShadowDrawable = context.getResources().getDrawable(
+          			shadowDrawableRes);
+    		}
+
+    		a.recycle();
+
 	}
+
+	/**
+	 * Sets the height of the shadow drawable in pixels.
+	 *
+	 * @param height
+	 */
+	public void setShadowHeight(int height) {
+		mShadowHeight = height;
+	}
+	
 
 	public void setup(){
 		stickyViews = new ArrayList<View>();
@@ -161,8 +204,21 @@ public class StickyScrollView extends ScrollView {
 		super.dispatchDraw(canvas);
 		if(currentlyStickingView != null){
 			canvas.save();
-			canvas.translate(getPaddingLeft() + stickyViewLeftOffset,
-					getScrollY() + stickyViewTopOffset + (clippingToPadding ? getPaddingTop() : 0));
+			canvas.translate(getPaddingLeft() + stickyViewLeftOffset, getScrollY() + stickyViewTopOffset + (clippingToPadding ? getPaddingTop() : 0));
+
+			canvas.clipRect(0, (clippingToPadding ? -stickyViewTopOffset : 0),
+          			getWidth() - stickyViewLeftOffset,
+          			currentlyStickingView.getHeight() + mShadowHeight + 1);
+
+      			if (mShadowDrawable != null) {
+        			int left = 0;
+        			int right = currentlyStickingView.getWidth();
+        			int top = currentlyStickingView.getHeight();
+        			int bottom = currentlyStickingView.getHeight() + mShadowHeight;
+        			mShadowDrawable.setBounds(left, top, right, bottom);
+        			mShadowDrawable.draw(canvas);
+      			}
+
 			canvas.clipRect(0, (clippingToPadding ? -stickyViewTopOffset : 0), getWidth(), currentlyStickingView.getHeight());
 			if(getStringTagForView(currentlyStickingView).contains(FLAG_HASTRANSPARANCY)){
 				showView(currentlyStickingView);

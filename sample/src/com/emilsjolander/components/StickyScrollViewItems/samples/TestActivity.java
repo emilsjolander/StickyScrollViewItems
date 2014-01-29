@@ -26,5 +26,14 @@ public class TestActivity extends Activity {
 				Toast.makeText(getApplicationContext(), "hej", Toast.LENGTH_SHORT).show();
 			}
 		});
+	     
+         /**
+          * Below shows setting the scroll view shadow properties programatically.
+          */
+         // StickyScrollView scrollView = (StickyScrollView)
+         // findViewById(R.id.ScrollView);
+         // scrollView.setShadowDrawable(getResources().getDrawable(
+         // R.drawable.sticky_shadow_default));
+         // scrollView.setShadowHeight(height);
     }
 }

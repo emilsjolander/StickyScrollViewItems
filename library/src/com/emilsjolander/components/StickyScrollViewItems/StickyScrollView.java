@@ -67,6 +67,8 @@ public class StickyScrollView extends ScrollView {
 		}
 	};
 
+	private OnStickyScrollViewListener mListener = null;
+
 	public StickyScrollView(Context context) {
 		this(context, null);
 	}
@@ -324,12 +326,23 @@ public class StickyScrollView extends ScrollView {
 		if(((String)currentlyStickingView.getTag()).contains(FLAG_NONCONSTANT)){
 			post(invalidateRunnable);
 		}
+
+		// Notifiy the listener if any
+		if(mListener != null){
+            mListener.onShow(currentlyStickingView);
+        }
 	}
 
 	private void stopStickingCurrentlyStickingView() {
 		if(getStringTagForView(currentlyStickingView).contains(FLAG_HASTRANSPARANCY)){
 			showView(currentlyStickingView);
 		}
+
+		// Notify the listener if any
+		if(mListener != null){
+            mListener.onHide(currentlyStickingView);
+        }
+
 		currentlyStickingView = null;
 		removeCallbacks(invalidateRunnable);
 	}
@@ -396,5 +409,14 @@ public class StickyScrollView extends ScrollView {
 			v.startAnimation(anim);
 		}
 	}
+
+    public void setOnStickyScrollViewListener(OnStickyScrollViewListener listener){
+        this.mListener = listener;
+    }
+
+    public interface OnStickyScrollViewListener{
+        public void onHide(View v);
+        public void onShow(View v);
+    }
 
 }

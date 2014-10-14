@@ -111,7 +111,10 @@ public class StickyScrollView extends ScrollView {
 	public void setShadowHeight(int height) {
 		mShadowHeight = height;
 	}
-	
+
+	public void setShadowDrawable(Drawable drawable) {
+        mShadowDrawable = drawable;
+  }
 
 	public void setup(){
 		stickyViews = new ArrayList<View>();

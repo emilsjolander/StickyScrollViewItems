@@ -356,7 +356,7 @@ public class StickyScrollView extends ScrollView {
 			ViewGroup vg = (ViewGroup)v;
 			for(int i = 0 ; i<vg.getChildCount() ; i++){
 				String tag = getStringTagForView(vg.getChildAt(i));
-				if(tag!=null && tag.contains(STICKY_TAG)){
+				if(tag!=null && tag.contains(STICKY_TAG) && vg.getChildAt(i).getVisibility() == VISIBLE){
 					stickyViews.add(vg.getChildAt(i));
 				}else if(vg.getChildAt(i) instanceof ViewGroup){
 					findStickyViews(vg.getChildAt(i));
@@ -364,7 +364,7 @@ public class StickyScrollView extends ScrollView {
 			}
 		}else{
 			String tag = (String) v.getTag();
-			if(tag!=null && tag.contains(STICKY_TAG)){
+			if(tag!=null && tag.contains(STICKY_TAG) && v.getVisibility() == VISIBLE){
 				stickyViews.add(v);
 			}
 		}

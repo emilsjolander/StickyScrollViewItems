@@ -3,20 +3,21 @@ apply plugin: 'android'
 repositories {
     mavenCentral()
 }
-dependencies {
-    compile project(':library')
-    compile 'com.android.support:support-v4:18.0.0'
-}
 
 android {
-    compileSdkVersion 18
-    buildToolsVersion '18.0.1'
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            res.srcDirs = ['res']
-        }
+    defaultConfig {
+        applicationId "com.emilsjolander.components.StickyScrollViewItems.samples"
+        minSdkVersion 7
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
     }
+}
+
+dependencies {
+    compile project(':library')
+    compile 'com.android.support:support-v4:22.2.0'
 }

@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
 
-import com.emilsjolander.components.StickyScrollViewItems.R;
-
 /**
  * 
  * @author Emil Sj�lander - sjolander.emil@gmail.com

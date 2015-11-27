@@ -1,7 +1,5 @@
 package com.emilsjolander.components.StickyScrollViewItems;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -13,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ScrollView;
+
+import java.util.ArrayList;
 
 /**
  * 
@@ -41,6 +41,14 @@ public class StickyScrollView extends ScrollView {
 	 */
 	private static final int DEFAULT_SHADOW_HEIGHT = 10; // dp;
 
+    /**
+     * Interface for start sticking and stop sticking current view listener.
+     */
+    public interface OnStickyScrollViewListener {
+        public void startStickingView(View v);
+        public void stopStickingCurrentView(View v);
+    }
+
 	private ArrayList<View> stickyViews;
 	private View currentlyStickingView;
 	private float stickyViewTopOffset;
@@ -51,9 +59,9 @@ public class StickyScrollView extends ScrollView {
 
 	private int mShadowHeight;
 	private Drawable mShadowDrawable;
+    private OnStickyScrollViewListener mListener;
 
 	private final Runnable invalidateRunnable = new Runnable() {
-
 		@Override
 		public void run() {
 			if(currentlyStickingView!=null){
@@ -79,10 +87,7 @@ public class StickyScrollView extends ScrollView {
 		super(context, attrs, defStyle);
 		setup();
 
-		
-
-		TypedArray a = context.obtainStyledAttributes(attrs,
-		        R.styleable.StickyScrollView, defStyle, 0);
+		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.StickyScrollView, defStyle, 0);
 
     		final float density = context.getResources().getDisplayMetrics().density;
     		int defaultShadowHeightInPix = (int) (DEFAULT_SHADOW_HEIGHT * density + 0.5f);
@@ -95,12 +100,10 @@ public class StickyScrollView extends ScrollView {
         		R.styleable.StickyScrollView_stuckShadowDrawable, -1);
 
     		if (shadowDrawableRes != -1) {
-      			mShadowDrawable = context.getResources().getDrawable(
-          			shadowDrawableRes);
+      			mShadowDrawable = context.getResources().getDrawable(shadowDrawableRes);
     		}
 
     		a.recycle();
-
 	}
 
 	/**
@@ -111,7 +114,15 @@ public class StickyScrollView extends ScrollView {
 	public void setShadowHeight(int height) {
 		mShadowHeight = height;
 	}
-	
+
+    /**
+     * Sets shadow drawable.
+     *
+     * @param mShadowDrawable
+     */
+	public void setShadowDrawable(Drawable mShadowDrawable) {
+		this.mShadowDrawable = mShadowDrawable;
+	}
 
 	public void setup(){
 		stickyViews = new ArrayList<View>();
@@ -324,12 +335,23 @@ public class StickyScrollView extends ScrollView {
 		if(((String)currentlyStickingView.getTag()).contains(FLAG_NONCONSTANT)){
 			post(invalidateRunnable);
 		}
+
+        // Notify the listener if any
+        if(mListener != null) {
+            mListener.startStickingView(currentlyStickingView);
+        }
 	}
 
 	private void stopStickingCurrentlyStickingView() {
 		if(getStringTagForView(currentlyStickingView).contains(FLAG_HASTRANSPARANCY)){
 			showView(currentlyStickingView);
 		}
+
+        // Notify the listener if any
+        if(mListener != null) {
+            mListener.stopStickingCurrentView(currentlyStickingView);
+        }
+
 		currentlyStickingView = null;
 		removeCallbacks(invalidateRunnable);
 	}
@@ -397,4 +419,10 @@ public class StickyScrollView extends ScrollView {
 		}
 	}
 
+    /**
+     * Set listener for OnStickyScrollView event.
+     */
+    public void setOnStickyScrollViewListener(OnStickyScrollViewListener listener) {
+        this.mListener = listener;
+    }
 }

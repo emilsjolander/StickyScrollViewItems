@@ -1,114 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.emilsjolander.components.StickyScrollViewItems.StickyScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.emilsjolander.components.StickyScrollViewItems.StickyScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:whatever="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     whatever:stuckShadowDrawable="@drawable/sticky_shadow_default"
-    android:id="@+id/ScrollView" >
+    android:id="@+id/scroll_view" >
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ffff0000" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ffffff00" />
 
         <FrameLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#99ff00ff"
             android:tag="sticky-nonconstant-hastransparancy" >
 
             <Button
-                android:id="@+id/mybutton"
+                android:id="@+id/my_button"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="match_parent"
                 android:text="hello world" />
         </FrameLayout>
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ffaaff33" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ff0000ff" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ff00ffff"
             android:tag="sticky" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ffff3333" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ffffeeee" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ff0033ff" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ffcc9922"
             android:tag="sticky" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ff333333" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ffeeeeee"
             android:tag="sticky" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ff999999" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#fff322ff" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ff22ff22" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ffff0000" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ffff00ff" />
 
         <View
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="100dip"
             android:background="#ff00ffff" />
     </LinearLayout>

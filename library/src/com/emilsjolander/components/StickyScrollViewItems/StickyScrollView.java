@@ -119,36 +119,44 @@ public class StickyScrollView extends ScrollView {
 	
 	private int getLeftForViewRelativeOnlyChild(View v){
 		int left = v.getLeft();
-		while(v.getParent() != getChildAt(0)){
+		while(v != null && v.getParent() != getChildAt(0)){
 			v = (View) v.getParent();
-			left += v.getLeft();
+			if (v != null){
+				left += v.getLeft();
+			}
 		}
 		return left;
 	}
 	
 	private int getTopForViewRelativeOnlyChild(View v){
 		int top = v.getTop();
-		while(v.getParent() != getChildAt(0)){
+		while(v != null && v.getParent() != getChildAt(0)){
 			v = (View) v.getParent();
-			top += v.getTop();
+			if (v != null){
+				top += v.getTop();
+			}
 		}
 		return top;
 	}
 	
 	private int getRightForViewRelativeOnlyChild(View v){
 		int right = v.getRight();
-		while(v.getParent() != getChildAt(0)){
+		while(v != null && v.getParent() != getChildAt(0)){
 			v = (View) v.getParent();
-			right += v.getRight();
+			if (v != null){
+				right += v.getRight();
+			}
 		}
 		return right;
 	}
 	
 	private int getBottomForViewRelativeOnlyChild(View v){
 		int bottom = v.getBottom();
-		while(v.getParent() != getChildAt(0)){
+		while(v != null && v.getParent() != getChildAt(0)){
 			v = (View) v.getParent();
-			bottom += v.getBottom();
+			if (v != null){
+				bottom += v.getBottom();
+			}
 		}
 		return bottom;
 	}

@@ -48,6 +48,16 @@ public class StickyScrollView extends ScrollView {
 	private boolean redirectTouchesToStickyView;
 	private boolean clippingToPadding;
 	private boolean clipToPaddingHasBeenSet;
+	
+	/**
+	 * True if onLayout has been called and before super.onLayout has been called.
+	 * False otherwise. 
+	 * 
+	 * During this time when this is true, we should not try to calculate any
+	 * views' dimensions as, if we are removing views, they could become null at
+	 * any time.
+	 */
+	public boolean isLayingOut = false;
 
 	private int mShadowHeight;
 	private Drawable mShadowDrawable;
@@ -118,6 +128,8 @@ public class StickyScrollView extends ScrollView {
 	}
 	
 	private int getLeftForViewRelativeOnlyChild(View v){
+		if (isLayingOut)
+			return 0;
 		int left = v.getLeft();
 		while(v.getParent() != getChildAt(0)){
 			v = (View) v.getParent();
@@ -127,6 +139,8 @@ public class StickyScrollView extends ScrollView {
 	}
 	
 	private int getTopForViewRelativeOnlyChild(View v){
+		if (isLayingOut)
+			return 0;
 		int top = v.getTop();
 		while(v.getParent() != getChildAt(0)){
 			v = (View) v.getParent();
@@ -136,6 +150,8 @@ public class StickyScrollView extends ScrollView {
 	}
 	
 	private int getRightForViewRelativeOnlyChild(View v){
+		if (isLayingOut)
+			return 0;
 		int right = v.getRight();
 		while(v.getParent() != getChildAt(0)){
 			v = (View) v.getParent();
@@ -145,6 +161,8 @@ public class StickyScrollView extends ScrollView {
 	}
 	
 	private int getBottomForViewRelativeOnlyChild(View v){
+		if (isLayingOut)
+			return 0;
 		int bottom = v.getBottom();
 		while(v.getParent() != getChildAt(0)){
 			v = (View) v.getParent();
@@ -155,7 +173,9 @@ public class StickyScrollView extends ScrollView {
 
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+		isLayingOut = true;
 		super.onLayout(changed, l, t, r, b);
+		isLayingOut = false;
 		if(!clipToPaddingHasBeenSet){
 			clippingToPadding = true;
 		}

@@ -1,16 +1,16 @@
-apply plugin: 'android'
+apply plugin: 'com.android'
 
 repositories {
     mavenCentral()
 }
 dependencies {
     compile project(':library')
-    compile 'com.android.support:support-v4:18.0.0'
+    compile 'com.android.support:support-v4:26.0.2'
 }
 
 android {
-    compileSdkVersion 18
-    buildToolsVersion '18.0.1'
+  compileSdkVersion 26
+  buildToolsVersion "26.0.2"
 
     sourceSets {
         main {

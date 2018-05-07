@@ -29,12 +29,12 @@ public class StickyScrollView extends ScrollView {
 	/**
 	 * Flag for views that should stick and have non-constant drawing. e.g. Buttons, ProgressBars etc
 	 */
-	public static final String FLAG_NONCONSTANT = "-nonconstant";
+	public static final String FLAG_NON_CONSTANT = "-nonConstant";
 
 	/**
 	 * Flag for views that have aren't fully opaque
 	 */
-	public static final String FLAG_HASTRANSPARANCY = "-hastransparancy";
+	public static final String FLAG_HAS_TRANSPARENCY = "-hasTransparency";
 	
 	/**
 	 * Default height of the shadow peeking out below the stuck view.
@@ -220,7 +220,7 @@ public class StickyScrollView extends ScrollView {
       			}
 
 			canvas.clipRect(0, (clippingToPadding ? -stickyViewTopOffset : 0), getWidth(), currentlyStickingView.getHeight());
-			if(getStringTagForView(currentlyStickingView).contains(FLAG_HASTRANSPARANCY)){
+			if(getStringTagForView(currentlyStickingView).contains(FLAG_HAS_TRANSPARENCY)){
 				showView(currentlyStickingView);
 				currentlyStickingView.draw(canvas);
 				hideView(currentlyStickingView);
@@ -318,16 +318,16 @@ public class StickyScrollView extends ScrollView {
 
 	private void startStickingView(View viewThatShouldStick) {
 		currentlyStickingView = viewThatShouldStick;
-		if(getStringTagForView(currentlyStickingView).contains(FLAG_HASTRANSPARANCY)){
+		if(getStringTagForView(currentlyStickingView).contains(FLAG_HAS_TRANSPARENCY)){
 			hideView(currentlyStickingView);
 		}
-		if(((String)currentlyStickingView.getTag()).contains(FLAG_NONCONSTANT)){
+		if(((String)currentlyStickingView.getTag()).contains(FLAG_NON_CONSTANT)){
 			post(invalidateRunnable);
 		}
 	}
 
 	private void stopStickingCurrentlyStickingView() {
-		if(getStringTagForView(currentlyStickingView).contains(FLAG_HASTRANSPARANCY)){
+		if(getStringTagForView(currentlyStickingView).contains(FLAG_HAS_TRANSPARENCY)){
 			showView(currentlyStickingView);
 		}
 		currentlyStickingView = null;

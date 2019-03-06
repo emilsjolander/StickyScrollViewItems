@@ -54,7 +54,7 @@ As with a regular `ScrollView` you are only allowed one child. But that child ca
 </StickyScrollView>
 ```
 
-There are also two additional flags that can be set on views that were added to optimize performance for the most usual cases. If the view you want to stick either has transparency or does not have a constant representation than you must supply one or both of the following flags. `-hastransparancy` for views that have transparancy and `-nonconstant` for views that will change appearance during there sticky time (examples are buttons with pressed states as well as progress spinners).
+There are also two additional flags that can be set on views that were added to optimize performance for the most usual cases. If the view you want to stick either has transparency or does not have a constant representation than you must supply one or both of the following flags. `-hastransparancy` for views that have transparency and `-nonconstant` for views that will change appearance during there sticky time (examples are buttons with pressed states as well as progress spinners).
 
 So this ends up with 4 different ways to tag a view as sticky resulting is slightly different behaviour `android:tag="sticky"` `android:tag="sticky-hastransparancy"` `android:tag="sticky-nonconstant"` and `android:tag="sticky-hastransparancy-nonconstant"`.
 

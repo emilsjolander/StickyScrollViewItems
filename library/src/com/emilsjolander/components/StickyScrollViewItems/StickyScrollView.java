@@ -1,3 +1,5 @@
+package com.emilsjolander.components.StickyScrollViewItems;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;

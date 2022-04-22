@@ -41,6 +41,18 @@ public class StickyScrollView extends ScrollView {
 	 */
 	private static final int DEFAULT_SHADOW_HEIGHT = 10; // dp;
 
+	    public interface OnStickyChangeListener {
+        void onStickyStart();
+
+        void onFinishSticky();
+    }
+
+    private OnStickyChangeListener onStickyChangeListener = null;
+
+    public void setOnStickyChangeListener(OnStickyChangeListener stickyStartListener) {
+        this.onStickyChangeListener = stickyStartListener;
+    }
+
 	private ArrayList<View> stickyViews;
 	private View currentlyStickingView;
 	private float stickyViewTopOffset;
@@ -324,6 +336,9 @@ public class StickyScrollView extends ScrollView {
 		if(((String)currentlyStickingView.getTag()).contains(FLAG_NONCONSTANT)){
 			post(invalidateRunnable);
 		}
+		 if (onStickyChangeListener != null) {
+            onStickyChangeListener.onStickyStart();
+        }
 	}
 
 	private void stopStickingCurrentlyStickingView() {
@@ -332,6 +347,9 @@ public class StickyScrollView extends ScrollView {
 		}
 		currentlyStickingView = null;
 		removeCallbacks(invalidateRunnable);
+		  if (onStickyChangeListener != null) {
+            onStickyChangeListener.onFinishSticky();
+        }
 	}
 
 	/**
